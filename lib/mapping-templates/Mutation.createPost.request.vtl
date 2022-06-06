@@ -1,0 +1,19 @@
+{
+    "version" : "2018-05-29",
+    "operation" : "PutItem",
+    "key" : {
+        "siteId": $util.dynamodb.toDynamoDBJson($ctx.args.input.siteId),
+        "publishDate": $util.dynamodb.toDynamoDBJson($util.defaultIfNullOrEmpty($ctx.args.input.publishDate, $util.time.nowISO8601()))
+    },
+    "attributeValues" : {
+    	"id": $util.dynamodb.toDynamoDBJson($util.autoId()),
+        "title": $util.dynamodb.toDynamoDBJson($ctx.args.input.title),
+        "content": $util.dynamodb.toDynamoDBJson($ctx.args.input.content),
+    },
+    "condition": {
+        "expression": "attribute_not_exists(#siteId)",
+        "expressionNames": {
+            "#siteId": "siteId"
+        }
+    }
+}
